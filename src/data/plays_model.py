@@ -22,11 +22,12 @@ def play_json_to_play_dict(play_json):
         strength = play_json["result"]["strength"]["code"]
     
     play_dict = {
-        "event_idx": play_json["about"]["eventId"],
+        "event_idx": play_json["about"]["eventIdx"],
         "event_type_id": play_json["result"]["eventTypeId"],
         "period_idx": play_json["about"]["period"],
         "period_type": play_json["about"]["periodType"],
         "game_time": play_json["about"]["dateTime"],
+        "period_time": play_json["about"]["periodTime"],
         "shot_type": play_json["result"].get("secondaryType"),
         "team_initiative_id": play_json["team"].get("triCode"),
         "team_initiative_name": play_json["team"].get("name"),
@@ -51,18 +52,23 @@ def augment_with_previous_event(all_plays_list, plays_dict_list):
         
         previous_event = {
             "previous_event_idx": previous_event_idx,
+            "previous_event_period": None,
+            "previous_event_period_time": None,
+            "previous_event_time": None,
             "previous_event_type": None,
             "previous_event_x_coord": None,
             "previous_event_y_coord": None,
-            "previous_event_time": None,
         }
         
         for play_json in all_plays_list:
-            if play_json["about"]["eventId"] == previous_event_idx:
+            if play_json["about"]["eventIdx"] == previous_event_idx:
                 previous_event["previous_event_type"] = play_json["result"]["eventTypeId"]
+                previous_event["previous_event_period"] = int(play_json["about"]["period"])
+                previous_event["previous_event_period_time"] = play_json["about"]["periodTime"]
+                previous_event["previous_event_time"] = play_json["about"]["dateTime"]
                 previous_event["previous_event_x_coord"] = play_json["coordinates"].get("x")
                 previous_event["previous_event_y_coord"] = play_json["coordinates"].get("y")
-                previous_event["previous_event_time"] = play_json["about"]["dateTime"]
+                
                 break
             
         play_dict.update(previous_event)
