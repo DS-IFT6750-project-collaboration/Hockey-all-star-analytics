@@ -2,8 +2,7 @@ def play_json_to_play_dict(play_json):
     # returns nothing if the event is not of type SHOT or GOAL
     if play_json["result"]["eventTypeId"] not in ["SHOT", "GOAL"]:
         return None
-    
-    
+        
     shooter_id = None
     shooter_name = None
     goalie_id = None
@@ -23,11 +22,12 @@ def play_json_to_play_dict(play_json):
         strength = play_json["result"]["strength"]["code"]
     
     play_dict = {
-        "event_idx": play_json["about"]["eventId"],
+        "event_idx": play_json["about"]["eventIdx"],
         "event_type_id": play_json["result"]["eventTypeId"],
         "period_idx": play_json["about"]["period"],
         "period_type": play_json["about"]["periodType"],
         "game_time": play_json["about"]["dateTime"],
+        "period_time": play_json["about"]["periodTime"],
         "shot_type": play_json["result"].get("secondaryType"),
         "team_initiative_id": play_json["team"].get("triCode"),
         "team_initiative_name": play_json["team"].get("name"),
@@ -44,8 +44,44 @@ def play_json_to_play_dict(play_json):
     return play_dict
 
 
-def game_json_to_plays_list(game_json):
+def augment_with_previous_event(all_plays_list, plays_dict_list):
+    augmented_plays_dict = []
+    for play_dict in plays_dict_list:
+        current_event_idx = play_dict["event_idx"]
+        previous_event_idx = current_event_idx - 1
+        
+        previous_event = {
+            "previous_event_idx": previous_event_idx,
+            "previous_event_period": None,
+            "previous_event_period_time": None,
+            "previous_event_time": None,
+            "previous_event_type": None,
+            "previous_event_x_coord": None,
+            "previous_event_y_coord": None,
+        }
+        
+        for play_json in all_plays_list:
+            if play_json["about"]["eventIdx"] == previous_event_idx:
+                previous_event["previous_event_type"] = play_json["result"]["eventTypeId"]
+                previous_event["previous_event_period"] = int(play_json["about"]["period"])
+                previous_event["previous_event_period_time"] = play_json["about"]["periodTime"]
+                previous_event["previous_event_time"] = play_json["about"]["dateTime"]
+                previous_event["previous_event_x_coord"] = play_json["coordinates"].get("x")
+                previous_event["previous_event_y_coord"] = play_json["coordinates"].get("y")
+                
+                break
+            
+        play_dict.update(previous_event)
+        augmented_plays_dict.append(play_dict)
+        
+    return augmented_plays_dict
+
+
+def game_json_to_plays_list(game_json, augment=False):
     all_plays_list = game_json["liveData"]["plays"]["allPlays"]
+    plays_dict_list = list(filter(None, [play_json_to_play_dict(play) for play in all_plays_list]))
+    if augment:
+        plays_dict_list = augment_with_previous_event(all_plays_list, plays_dict_list)
     
     game_metadata = {
         "gamePk": game_json["gameData"]["game"]["pk"],
@@ -54,7 +90,6 @@ def game_json_to_plays_list(game_json):
         "game_start_time": game_json["gameData"]["datetime"].get("dateTime")
     }
     
-    plays_dict_list = list(filter(None, [play_json_to_play_dict(play) for play in all_plays_list]))
     plays_with_metadata = []
     for play_dict in plays_dict_list:
         play_dict.update(game_metadata)

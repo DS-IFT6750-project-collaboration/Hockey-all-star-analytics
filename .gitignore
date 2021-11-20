@@ -1,3 +1,4 @@
 *.csv
 *.json
+.comet.config
 hena.ipynb
