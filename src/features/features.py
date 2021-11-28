@@ -80,7 +80,8 @@ def advanced_features(plays_df):
     dist_from_previous = _dist_from_previous(plays_df)
     rebound = _is_rebound(plays_df)
     angle_change = _angle_change(plays_df)
-    speed = pd.Series(dist_from_previous / seconds_from_previous, name="speed", index=plays_df.index).replace([np.inf, -np.inf, np.nan], 0, inplace=True)
+    speed = dist_from_previous / seconds_from_previous 
+    speed = pd.Series(speed, name="speed", index=plays_df.index).replace([np.inf, -np.inf, np.nan], 0)
     
     features_df = pd.concat([
         seconds_elapsed,

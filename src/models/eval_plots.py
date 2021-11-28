@@ -12,10 +12,10 @@ def random_baseline(y_test):
     np.random.shuffle(baseline)
     return baseline
 
-def plot_roc_auc(y_true, y_pred):
+def plot_roc_auc(y_true, y_pred, model_name=None):
     fig, axs = plt.subplots(1, 1)
 
-    RocCurveDisplay.from_predictions(y_true, y_pred, ax=axs, name="XGBoost baseline")
+    RocCurveDisplay.from_predictions(y_true, y_pred, ax=axs, name=model_name)
     
     baseline = random_baseline(y_true)
     baseline_kwargs = {
@@ -27,7 +27,7 @@ def plot_roc_auc(y_true, y_pred):
     plt.show()
 
 
-def plot_goal_rate(y_true, y_proba):
+def plot_goal_rate(y_true, y_proba, model_name=None):
     valid = pd.DataFrame()
     valid['true_labels'] = np.array(y_true)
     percentile = [[np.percentile(y_proba, i), np.percentile(y_proba, i+5)] for i in range(0,100,5)]
@@ -46,16 +46,17 @@ def plot_goal_rate(y_true, y_proba):
     shot_prob_percentile = np.arange(0, 100, 5)
        
     ##Plot of goal rate vs Shot probability percentile
-    plt.plot(shot_prob_percentile, goal_rate)
+    plt.plot(shot_prob_percentile, goal_rate, label=model_name)
     plt.xlim(100, 0)
     plt.ylim(0, 100)
     plt.title("Goal Rate")
     plt.xlabel('Shot probability model percentile', fontsize=14)
     plt.ylabel('Goals / (Shots + Goals)', fontsize=14)
+    plt.legend()
     plt.show()
 
 
-def plot_cumulative_proportion(y_true, y_proba):
+def plot_cumulative_proportion(y_true, y_proba, model_name=None):
     valid = pd.DataFrame()
     valid['true_labels'] = np.array(y_true)
     percentile = [[np.percentile(y_proba, i), np.percentile(y_proba, i+5)] for i in range(0,100,5)]
@@ -70,19 +71,20 @@ def plot_cumulative_proportion(y_true, y_proba):
     
     shot_prob_percentile = np.arange(0, 100, 5)
     
-    plt.plot(shot_prob_percentile, cumulative)
+    plt.plot(shot_prob_percentile, cumulative, label=model_name)
     plt.xlim(100, 0)
     plt.ylim(0, 100)
     plt.title("Cumulative % of goals")
     plt.xlabel('Shot probability model percentile', fontsize=14)
     plt.ylabel('Proportion', fontsize=14)
+    plt.legend()
     plt.show()
   
     
-def plot_calibration_curve(y_true, y_proba):
+def plot_calibration_curve(y_true, y_proba, model_name=None):
     fig, axs = plt.subplots(1, 1)
 
-    CalibrationDisplay.from_predictions(y_true, y_proba, ax=axs, name="XGBoost baseline")
+    CalibrationDisplay.from_predictions(y_true, y_proba, ax=axs, name=model_name)
     
     plt.title("Calibration Curve")
     plt.show()
