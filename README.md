@@ -4,9 +4,9 @@ Hockey-all-star-analytics
 This project is part IFT6758- Data science course taught at University of Montreal.
 It contains files for data preparation and data visualization for Hockey primer using NHL data.
 For Milestone 2: Refer notebooks:
-                              -ift6758-milestone2_tj.ipynb  
-                              -Milestone2_Q6 advanced models.ipynb
-                              -Milestone2_Feature engineering(Q2,Q3).ipynb          
+                              -ift6758-milestone2_tj.ipynb,   
+                              Milestone2_Q6 advanced models.ipynb, 
+                              Milestone2_Feature engineering(Q2,Q3).ipynb          
                               
 Project Organization
 ------------
