@@ -3,7 +3,11 @@ Hockey-all-star-analytics
 
 This project is part IFT6758- Data science course taught at University of Montreal.
 It contains files for data preparation and data visualization for Hockey primer using NHL data.
-
+For Milestone 2: Refer notebooks:
+                              -ift6758-milestone2_tj.ipynb  
+                              -Milestone2_Q6 advanced models.ipynb
+                              -Milestone2_Feature engineering(Q2,Q3).ipynb          
+                              
 Project Organization
 ------------
 
@@ -16,13 +20,12 @@ Project Organization
     │   ├── processed      <- The final, canonical data sets for modeling.
     │   └── raw            <- The original, immutable data dump.
     │
-    ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
     │
-    ├── models             <- Trained and serialized models, model predictions, or model summaries
+    ├── models             <- Pickle file for saved models
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── notebooks          <- Contains Jupyter notebooks for milestone 1. 
+    │                         
+    │                         
     │
     ├── references         <- Data dictionaries, manuals, and all other explanatory materials.
     │
@@ -44,10 +47,12 @@ Project Organization
     │   │
     │   ├── models         <- Scripts to train models and then use trained models to make
     │   │   │                 predictions
-    │   │   ├── predict_model.py
-    │   │   └── train_model.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
+    │   │   ├── best_model.py - To logg lgbm model in comet.ml
+    │   │   └── logistic_comet.py - To logg logistic regression model in comet.ml
+    |   |   └── logistic_regression.py - contains code for logistic regression
+    │   |   └── xgboost.py       - Contains code for xgboost model
+    |   |
+    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
     │       └── visualize.py
     │
     └── tox.ini            <- tox file with settings for running tox; see tox.readthedocs.io
